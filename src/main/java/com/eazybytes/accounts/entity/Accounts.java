@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Accounts extends BaseEntity{
-    
+
     @JoinColumn(name = "customer_id")
     private Long customerId;
 
