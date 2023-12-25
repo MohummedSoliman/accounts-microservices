@@ -1,5 +1,6 @@
 package com.eazybytes.accounts.controller;
 
+import com.eazybytes.accounts.constant.AccountsConstant;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.dto.ResponseDto;
 import com.eazybytes.accounts.service.IAccountsService;
@@ -36,5 +37,19 @@ public class AccountController {
     public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam String mobileNumber){
         CustomerDto customerDto = iAccountsService.fetchAccount(mobileNumber);
         return new ResponseEntity<>(customerDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto> updateAccountDetails(@RequestBody CustomerDto customerDto){
+        boolean isUpdated = iAccountsService.updateAccount(customerDto);
+        if(isUpdated){
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(AccountsConstant.STATUS_200, AccountsConstant.MESSAGE_200));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDto(AccountsConstant.STATUS_500, AccountsConstant.MESSAGE_500));
+        }
     }
 }
