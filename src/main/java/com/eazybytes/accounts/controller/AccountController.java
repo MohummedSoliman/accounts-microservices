@@ -1,6 +1,7 @@
 package com.eazybytes.accounts.controller;
 
 import com.eazybytes.accounts.constant.AccountsConstant;
+import com.eazybytes.accounts.dto.AccountContactInfoDto;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.dto.ResponseDto;
 import com.eazybytes.accounts.service.IAccountsService;
@@ -11,6 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +30,22 @@ import static com.eazybytes.accounts.constant.AccountsConstant.STATUS_201;
 )
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
-@AllArgsConstructor
 @Validated
 public class AccountController {
+    private final IAccountsService iAccountsService;
+    @Autowired
+    public AccountController(IAccountsService iAccountsService){
+        this.iAccountsService = iAccountsService;
+    }
 
-    private IAccountsService iAccountsService;
+    @Value("${build.version}")
+    private String buildVersion;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private AccountContactInfoDto accountContactInfoDto;
 
     @Operation(
             summary = "Create Accounts Rest API",
@@ -127,5 +142,70 @@ public class AccountController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDto(AccountsConstant.STATUS_500, AccountsConstant.MESSAGE_500));
         }
+    }
+
+    @Operation(
+            summary = "Get build information",
+            description = "Get Build information that is deployed into accounts micro services"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error"
+            )
+    })
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(buildVersion);
+    }
+
+    @Operation(
+            summary = "Get Java Version",
+            description = "Get Java version details that is installed into accounts services"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error"
+            )
+    })
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion() {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(environment.getProperty("JAVA_HOME"));
+    }
+
+    @Operation(
+            summary = "Get Contact Information",
+            description = "Contact Info details that can be reached out in case of any issues"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error"
+            )
+    })
+    @GetMapping("/contact-info")
+    public ResponseEntity<AccountContactInfoDto> getContactInfo() {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accountContactInfoDto);
     }
 }
