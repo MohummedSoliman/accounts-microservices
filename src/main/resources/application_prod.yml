@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+build:
+  version: "1.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related Prod APIS"
+  contactDetails:
+    name: "Mohamed Ibrahim - Product Owner"
+    email: "mohamed@example.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-12345
+
+
+

@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: "qa"
+
+build:
+  version: "2.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related QA APIS"
+  contactDetails:
+    name: "Mohamed Ibrahim- QA Lead"
+    email: "mohamed@example.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-12345
+
+
+
